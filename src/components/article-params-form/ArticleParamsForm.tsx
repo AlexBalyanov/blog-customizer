@@ -6,14 +6,37 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import { Select } from 'src/ui/select';
 import { Text } from 'src/ui/text';
-import { fontFamilyOptions } from 'src/constants/articleProps';
+import {
+	ArticleStateType,
+	fontColors,
+	fontFamilyOptions,
+	OptionType,
+} from 'src/constants/articleProps';
 
 export const ArticleParamsForm = () => {
 	const [isOpen, setOpen] = useState<boolean>(false);
 
+	const [config, setConfig] = useState<Partial<ArticleStateType>>({});
+
 	const toggleOpenState = () => {
 		setOpen(!isOpen);
 	};
+
+	const handleFontSelect = (option: OptionType) => {
+		setConfig({
+			...config,
+			fontFamilyOption: option,
+		});
+	};
+
+	const handleFontColorSelect = (option: OptionType) => {
+		setConfig({
+			...config,
+			fontColor: option,
+		});
+	};
+
+	console.log(config);
 
 	return (
 		<>
@@ -26,8 +49,17 @@ export const ArticleParamsForm = () => {
 					</Text>
 					<Select
 						title={'шрифт'}
-						selected={fontFamilyOptions[0]}
-						options={fontFamilyOptions}>
+						placeholder={'Выберите шрифт'}
+						selected={config.fontFamilyOption}
+						options={fontFamilyOptions}
+						onChange={handleFontSelect}>
+					</Select>
+					<Select
+						title={'цвет шрифта'}
+						placeholder={'Выберите цвет шрифта'}
+						selected={config.fontColor}
+						options={fontColors}
+						onChange={handleFontColorSelect}>
 					</Select>
 					<div className={styles.bottomContainer}>
 						<Button title='Сбросить' htmlType='reset' type='clear' />
