@@ -1,8 +1,7 @@
 import { ArrowButton } from 'src/ui/arrow-button';
-import { Button } from 'src/ui/button';
 
 import styles from './ArticleParamsForm.module.scss';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import clsx from 'clsx';
 import { Select } from 'src/ui/select';
 import { Text } from 'src/ui/text';
@@ -14,12 +13,13 @@ import {
 } from 'src/constants/articleProps';
 
 export type ArticleParamsFormProps = {
+	children: ReactNode;
 	config: Partial<ArticleStateType>;
 	onChange: (config: Partial<ArticleStateType>) => void;
 };
 
 export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
-	const { config, onChange } = props;
+	const { children, config, onChange } = props;
 
 	const [isOpen, setOpen] = useState<boolean>(false);
 
@@ -55,19 +55,14 @@ export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
 						placeholder={'Выберите шрифт'}
 						selected={config.fontFamilyOption}
 						options={fontFamilyOptions}
-						onChange={handleFontSelect}>
-					</Select>
+						onChange={handleFontSelect}></Select>
 					<Select
 						title={'цвет шрифта'}
 						placeholder={'Выберите цвет шрифта'}
 						selected={config.fontColor}
 						options={fontColors}
-						onChange={handleFontColorSelect}>
-					</Select>
-					<div className={styles.bottomContainer}>
-						<Button title='Сбросить' htmlType='reset' type='clear' />
-						<Button title='Применить' htmlType='submit' type='apply' />
-					</div>
+						onChange={handleFontColorSelect}></Select>
+					<div className={styles.bottomContainer}>{children}</div>
 				</form>
 			</aside>
 		</>
