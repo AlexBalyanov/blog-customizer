@@ -1,6 +1,6 @@
 import { ArrowButton } from 'src/ui/arrow-button';
 import styles from './ArticleParamsForm.module.scss';
-import { SyntheticEvent, useState } from 'react';
+import { SyntheticEvent, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { Select } from 'src/ui/select';
 import { Text } from 'src/ui/text';
@@ -17,6 +17,7 @@ import {
 import { Button } from 'src/ui/button';
 import { RadioGroup } from 'src/ui/radio-group';
 import { Separator } from 'src/ui/separator';
+import { useOutsideFromClose } from 'components/article-params-form/hooks/useOutsideFormClose';
 
 export type ArticleParamsFormProps = {
 	onApply: (value: Partial<ArticleStateType>) => void;
@@ -27,6 +28,9 @@ export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
 	const [isOpen, setOpen] = useState<boolean>(false);
 	const [formConfig, setFormConfig] =
 		useState<Partial<ArticleStateType>>(defaultArticleState);
+	const formRef = useRef<HTMLElement | null>(null);
+
+	useOutsideFromClose({ isOpen: isOpen, rootRef: formRef, onChange: setOpen });
 
 	const toggleOpenState = () => {
 		setOpen(!isOpen);
@@ -69,20 +73,19 @@ export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
 
 	const handeApplyingChanges = (evt?: SyntheticEvent) => {
 		evt?.preventDefault();
-
 		onApply(formConfig);
 	};
 
 	const handleReset = () => {
 		setFormConfig(defaultArticleState);
-
-		onApply(formConfig);
+		onApply(defaultArticleState);
 	};
 
 	return (
 		<>
 			<ArrowButton isOpen={isOpen} onClick={toggleOpenState} />
 			<aside
+				ref={formRef}
 				className={clsx(styles.container, { [styles.container_open]: isOpen })}>
 				<form className={styles.form}>
 					<Text as='h2' size={31} weight={800} uppercase>
@@ -92,8 +95,7 @@ export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
 						title={'шрифт'}
 						selected={formConfig.fontFamilyOption}
 						options={fontFamilyOptions}
-						onChange={handleFontSelect}>
-					</Select>
+						onChange={handleFontSelect}></Select>
 					<RadioGroup
 						name={'размер шрифта'}
 						options={fontSizeOptions}
@@ -105,21 +107,18 @@ export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
 						title={'цвет шрифта'}
 						selected={formConfig.fontColor}
 						options={fontColors}
-						onChange={handleFontColorSelect}>
-					</Select>
+						onChange={handleFontColorSelect}></Select>
 					<Separator />
 					<Select
 						title={'цвет фона'}
 						selected={formConfig.backgroundColor}
 						options={backgroundColors}
-						onChange={handleBgColorSelect}>
-					</Select>
+						onChange={handleBgColorSelect}></Select>
 					<Select
 						title={'ширина контейнера'}
 						selected={formConfig.contentWidth}
 						options={contentWidthArr}
-						onChange={handleContentWidthSelect}>
-					</Select>
+						onChange={handleContentWidthSelect}></Select>
 					<div className={styles.bottomContainer}>
 						<Button
 							title='Сбросить'
