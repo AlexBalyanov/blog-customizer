@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import { StrictMode, CSSProperties, useState, SyntheticEvent } from 'react';
+import { StrictMode, CSSProperties, useState } from 'react';
 import clsx from 'clsx';
 
 import { Article } from './components/article/Article';
@@ -11,25 +11,17 @@ import {
 
 import './styles/index.scss';
 import styles from './styles/index.module.scss';
-import { Button } from 'src/ui/button';
 
 const domNode = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(domNode);
 
 const App = () => {
-	const [config, setConfig] = useState<Partial<ArticleStateType>>({});
+	const [articleConfig, setArticleConfig] =
+		useState<Partial<ArticleStateType>>(defaultArticleState);
 
-	const articleConfig: Partial<ArticleStateType> = {};
-
-	const handleFormChange = (config: Partial<ArticleStateType>) => {
-		setConfig(config);
+	const handleApplyFormConfig = (value: Partial<ArticleStateType>) => {
+		setArticleConfig(value);
 	};
-
-	const handeApplyingChanges = (evt?: SyntheticEvent) => {
-		evt?.preventDefault();
-	};
-
-	console.log(articleConfig);
 
 	return (
 		<main
@@ -43,15 +35,7 @@ const App = () => {
 					'--bg-color': defaultArticleState.backgroundColor.value,
 				} as CSSProperties
 			}>
-			<ArticleParamsForm config={config} onChange={handleFormChange}>
-				<Button title='Сбросить' htmlType='reset' type='clear' />
-				<Button
-					title='Применить'
-					htmlType='submit'
-					type='apply'
-					onClick={handeApplyingChanges}
-				/>
-			</ArticleParamsForm>
+			<ArticleParamsForm onApply={handleApplyFormConfig}></ArticleParamsForm>
 			<Article />
 		</main>
 	);
