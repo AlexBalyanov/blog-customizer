@@ -13,30 +13,33 @@ import {
 	OptionType,
 } from 'src/constants/articleProps';
 
-export const ArticleParamsForm = () => {
-	const [isOpen, setOpen] = useState<boolean>(false);
+export type ArticleParamsFormProps = {
+	config: Partial<ArticleStateType>;
+	onChange: (config: Partial<ArticleStateType>) => void;
+};
 
-	const [config, setConfig] = useState<Partial<ArticleStateType>>({});
+export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
+	const { config, onChange } = props;
+
+	const [isOpen, setOpen] = useState<boolean>(false);
 
 	const toggleOpenState = () => {
 		setOpen(!isOpen);
 	};
 
 	const handleFontSelect = (option: OptionType) => {
-		setConfig({
+		onChange({
 			...config,
 			fontFamilyOption: option,
 		});
 	};
 
 	const handleFontColorSelect = (option: OptionType) => {
-		setConfig({
+		onChange({
 			...config,
 			fontColor: option,
 		});
 	};
-
-	console.log(config);
 
 	return (
 		<>
