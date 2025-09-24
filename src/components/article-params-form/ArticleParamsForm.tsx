@@ -1,5 +1,4 @@
 import { ArrowButton } from 'src/ui/arrow-button';
-
 import styles from './ArticleParamsForm.module.scss';
 import { SyntheticEvent, useState } from 'react';
 import clsx from 'clsx';
@@ -7,12 +6,17 @@ import { Select } from 'src/ui/select';
 import { Text } from 'src/ui/text';
 import {
 	ArticleStateType,
+	backgroundColors,
+	contentWidthArr,
 	defaultArticleState,
 	fontColors,
 	fontFamilyOptions,
+	fontSizeOptions,
 	OptionType,
 } from 'src/constants/articleProps';
 import { Button } from 'src/ui/button';
+import { RadioGroup } from 'src/ui/radio-group';
+import { Separator } from 'src/ui/separator';
 
 export type ArticleParamsFormProps = {
 	onApply: (value: Partial<ArticleStateType>) => void;
@@ -42,6 +46,27 @@ export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
 		});
 	};
 
+	const handleFontSizeSelect = (option: OptionType) => {
+		setFormConfig({
+			...formConfig,
+			fontSizeOption: option,
+		});
+	};
+
+	const handleBgColorSelect = (option: OptionType) => {
+		setFormConfig({
+			...formConfig,
+			backgroundColor: option,
+		});
+	};
+
+	const handleContentWidthSelect = (option: OptionType) => {
+		setFormConfig({
+			...formConfig,
+			contentWidth: option,
+		});
+	};
+
 	const handeApplyingChanges = (evt?: SyntheticEvent) => {
 		evt?.preventDefault();
 
@@ -65,16 +90,36 @@ export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
 					</Text>
 					<Select
 						title={'шрифт'}
-						placeholder={'Выберите шрифт'}
 						selected={formConfig.fontFamilyOption}
 						options={fontFamilyOptions}
-						onChange={handleFontSelect}></Select>
+						onChange={handleFontSelect}>
+					</Select>
+					<RadioGroup
+						name={'размер шрифта'}
+						options={fontSizeOptions}
+						selected={formConfig.fontSizeOption}
+						title={'размер шрифта'}
+						onChange={handleFontSizeSelect}
+					/>
 					<Select
 						title={'цвет шрифта'}
-						placeholder={'Выберите цвет шрифта'}
 						selected={formConfig.fontColor}
 						options={fontColors}
-						onChange={handleFontColorSelect}></Select>
+						onChange={handleFontColorSelect}>
+					</Select>
+					<Separator />
+					<Select
+						title={'цвет фона'}
+						selected={formConfig.backgroundColor}
+						options={backgroundColors}
+						onChange={handleBgColorSelect}>
+					</Select>
+					<Select
+						title={'ширина контейнера'}
+						selected={formConfig.contentWidth}
+						options={contentWidthArr}
+						onChange={handleContentWidthSelect}>
+					</Select>
 					<div className={styles.bottomContainer}>
 						<Button
 							title='Сбросить'

@@ -29,10 +29,10 @@ const App = () => {
 			style={
 				{
 					'--font-family': articleConfig.fontFamilyOption?.value,
-					'--font-size': defaultArticleState.fontSizeOption.value,
-					'--font-color': defaultArticleState.fontColor.value,
-					'--container-width': defaultArticleState.contentWidth.value,
-					'--bg-color': defaultArticleState.backgroundColor.value,
+					'--font-size': articleConfig.fontSizeOption?.value,
+					'--font-color': articleConfig.fontColor?.value,
+					'--container-width': articleConfig.contentWidth?.value,
+					'--bg-color': articleConfig.backgroundColor?.value,
 				} as CSSProperties
 			}>
 			<ArticleParamsForm onApply={handleApplyFormConfig}></ArticleParamsForm>
