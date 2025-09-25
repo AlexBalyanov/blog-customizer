@@ -21,20 +21,30 @@ import { useOutsideFromClose } from 'components/article-params-form/hooks/useOut
 
 export type ArticleParamsFormProps = {
 	onApply: (value: Partial<ArticleStateType>) => void;
+	defaultState: Partial<ArticleStateType>;
 };
 
 export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
-	const { onApply } = props;
-	const [isOpen, setOpen] = useState<boolean>(false);
+	const { onApply, defaultState } = props;
+	const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
 	const [formConfig, setFormConfig] =
-		useState<Partial<ArticleStateType>>(defaultArticleState);
+		useState<Partial<ArticleStateType>>(defaultState);
 	const formRef = useRef<HTMLElement | null>(null);
 
-	useOutsideFromClose({ isOpen: isOpen, rootRef: formRef, onChange: setOpen });
-
 	const toggleOpenState = () => {
-		setOpen(!isOpen);
+		setIsFormOpen(!isFormOpen);
 	};
+
+	const handleEscKeyClose = () => {
+		setIsFormOpen(false);
+	};
+
+	useOutsideFromClose({
+		isFormOpen: isFormOpen,
+		rootRef: formRef,
+		onChange: setIsFormOpen,
+		onClose: handleEscKeyClose,
+	});
 
 	const handleFontSelect = (option: OptionType) => {
 		setFormConfig({
@@ -83,11 +93,16 @@ export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
 
 	return (
 		<>
-			<ArrowButton isOpen={isOpen} onClick={toggleOpenState} />
+			<ArrowButton isOpen={isFormOpen} onClick={toggleOpenState} />
 			<aside
 				ref={formRef}
-				className={clsx(styles.container, { [styles.container_open]: isOpen })}>
-				<form className={styles.form}>
+				className={clsx(styles.container, {
+					[styles.container_open]: isFormOpen,
+				})}>
+				<form
+					className={styles.form}
+					onSubmit={handeApplyingChanges}
+					onReset={handleReset}>
 					<Text as='h2' size={31} weight={800} uppercase>
 						Задайте параметры
 					</Text>
@@ -120,18 +135,8 @@ export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
 						options={contentWidthArr}
 						onChange={handleContentWidthSelect}></Select>
 					<div className={styles.bottomContainer}>
-						<Button
-							title='Сбросить'
-							htmlType='reset'
-							type='clear'
-							onClick={handleReset}
-						/>
-						<Button
-							title='Применить'
-							htmlType='submit'
-							type='apply'
-							onClick={handeApplyingChanges}
-						/>
+						<Button title='Сбросить' htmlType='reset' type='clear' />
+						<Button title='Применить' htmlType='submit' type='apply' />
 					</div>
 				</form>
 			</aside>
